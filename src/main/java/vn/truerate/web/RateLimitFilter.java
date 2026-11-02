@@ -30,7 +30,9 @@ public class RateLimitFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String uri = request.getRequestURI();
-        return !uri.equals("/api/analyze") && !uri.equals("/api/ocr") && !uri.equals("/api/kit");
+        // browsers send an OPTIONS check before the real call; it must not use up the user's limit
+        return "OPTIONS".equals(request.getMethod())
+                || (!uri.equals("/api/analyze") && !uri.equals("/api/ocr") && !uri.equals("/api/kit"));
     }
 
     @Override
