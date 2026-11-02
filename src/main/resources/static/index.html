@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0d14">
+  <title>Lãi Suất Thật · TrueRate</title>
+  <meta name="description" content="Kiểm tra lãi suất thật theo năm của khoản vay và tình trạng cấp phép của bên cho vay. Miễn phí, không cần tài khoản.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <div class="wordmark"><span class="dot"></span>Lãi Suất Thật <span class="en">· TrueRate</span></div>
+    <div id="aiChip" class="tag-pill" hidden></div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">Kiểm tra trước khi ký</div>
+    <h1>Lãi suất họ quảng cáo.<br><span class="fade">Lãi suất bạn thực sự trả.</span></h1>
+    <p class="sub">Nhập 4 con số từ hợp đồng vay. Code tính lãi suất thật theo năm, đối chiếu danh sách cấp phép, và AI chỉ giải thích kết quả bằng lời dễ hiểu. Miễn phí, không cần tài khoản, không lưu số liệu.</p>
+
+    <div class="demo-wrap">
+      <div class="device">
+        <div class="device-head">
+          <div class="title"><span class="status-dot" id="statusDot"></span><span id="deviceTitle">Kiểm tra khoản vay</span></div>
+          <div class="tag-pill sm" id="stepTag">Bước 1/3</div>
+        </div>
+        <div class="device-body">
+
+          <!-- SCREEN 0: CONSENT -->
+          <div class="screen" id="screen-consent">
+            <h2 class="s-title">Trước khi tiếp tục</h2>
+            <p class="s-text">Để tính lãi suất thật, TrueRate cần thông tin khoản vay của bạn. Đây là <b>dữ liệu tài chính nhạy cảm</b>.</p>
+            <ul class="plain">
+              <li>Chỉ dùng để tính lãi suất và đối chiếu quy định.</li>
+              <li>Không lưu số liệu khoản vay sau khi bạn xem kết quả. Thu nhập (nếu bạn chọn nhập) chỉ dùng để tính phần trăm gánh nặng và cũng không được lưu.</li>
+              <li>Một phần văn bản có thể gửi tới dịch vụ AI để viết câu giải thích. Bạn không nhập tên, số điện thoại hay giấy tờ cá nhân.</li>
+              <li>Bạn có thể dừng lại bất cứ lúc nào.</li>
+            </ul>
+            <label class="check"><input type="checkbox" id="consentBox"><span>Tôi đồng ý cung cấp thông tin khoản vay này để được tính lãi suất thật.</span></label>
+            <button class="btn btn-primary" id="consentNext" disabled>Tiếp tục</button>
+          </div>
+
+          <!-- SCREEN 1: FORM -->
+          <div class="screen" id="screen-form">
+            <div class="input-tabs" id="inputTabs">
+              <button type="button" class="input-tab active" id="tabManual">Nhập tay</button>
+              <button type="button" class="input-tab" id="tabOcr" hidden>Chụp ảnh / OCR</button>
+            </div>
+
+            <!-- OCR panel -->
+            <div id="ocrPanel" class="ocr-panel" hidden>
+              <label class="check small"><input type="checkbox" id="ocrConsent"><span>Tôi đồng ý gửi ảnh tới dịch vụ AI để đọc 4 mục. Ảnh không được lưu.</span></label>
+              <input type="file" id="ocrFile" accept="image/*" multiple hidden>
+              <button type="button" class="ocr-drop" id="ocrBtn" disabled>
+                <span class="ocr-drop-icon" aria-hidden="true">📷</span>
+                <span class="ocr-drop-text">Chọn ảnh hợp đồng hoặc màn hình app vay<br><span class="ocr-drop-sub">Có thể chọn nhiều trang (tối đa 6 ảnh)</span></span>
+              </button>
+              <ul id="ocrList" class="thumbs"></ul>
+              <button type="button" class="btn btn-primary slim" id="ocrSend" disabled>Đọc ảnh đã chọn</button>
+              <p id="ocrMsg" class="ocr-hint" role="status"></p>
+              <div class="ocr-hint">Chỉ đọc 4 mục (tiền nhận, tổng phải trả, số ngày, tên bên cho vay). <b>Hãy che CCCD, số điện thoại, họ tên trước khi tải ảnh.</b> Số liệu đọc ra cần bạn kiểm tra lại.</div>
+            </div>
+
+            <form id="loanForm" novalidate>
+              <p id="formNote" class="legal-tag" hidden></p>
+              <div id="manualPanel">
+                <div class="field">
+                  <label for="lender">Tên bên cho vay</label>
+                  <input id="lender" type="text" maxlength="100" autocomplete="off" placeholder="Tên công ty như ghi trong hợp đồng">
+                  <div class="unit">Dùng tên pháp lý trong hợp đồng, không chỉ tên ứng dụng.</div>
+                  <p class="err" id="err-lenderName" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="principal">Số tiền vay thực nhận</label>
+                  <input id="principal" type="text" inputmode="numeric" autocomplete="off" placeholder="5.000.000">
+                  <div class="unit">VNĐ · số tiền thật sự vào tài khoản, sau khi trừ phí</div>
+                  <p class="err" id="err-principalVnd" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="repay" id="repayLabel">Tổng số tiền phải trả</label>
+                  <input id="repay" type="text" inputmode="numeric" autocomplete="off" placeholder="6.150.000">
+                  <div class="unit">VNĐ · gốc + lãi + mọi loại phí, cho cả kỳ vay</div>
+                  <p class="err" id="err-totalRepayVnd" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label>Cách trả nợ</label>
+                  <div class="seg" role="radiogroup" aria-label="Cách trả nợ">
+                    <button type="button" class="seg-btn active" role="radio" aria-checked="true" data-pay="ONE_TIME">Trả một lần</button>
+                    <button type="button" class="seg-btn" role="radio" aria-checked="false" data-pay="MONTHLY">Trả góp hàng tháng</button>
+                  </div>
+                </div>
+                <div class="field" id="installField" hidden>
+                  <label for="installments">Số kỳ trả góp</label>
+                  <input id="installments" type="text" inputmode="numeric" autocomplete="off" placeholder="12">
+                  <div class="unit">tháng · mỗi kỳ trả bằng nhau</div>
+                  <p class="err" id="err-installments" role="alert"></p>
+                </div>
+                <div class="field" id="installAmtField" hidden>
+                  <label for="installAmt">Số tiền mỗi kỳ <span class="opt">nếu biết, tự tính tổng phải trả</span></label>
+                  <input id="installAmt" type="text" inputmode="numeric" autocomplete="off" placeholder="1.421.202">
+                  <div class="unit">VNĐ · số tiền trả mỗi tháng, gồm cả phí hằng tháng nếu có</div>
+                </div>
+                <div class="field" id="daysField">
+                  <label for="days">Thời hạn vay</label>
+                  <input id="days" type="text" inputmode="numeric" autocomplete="off" placeholder="28">
+                  <div class="unit">ngày</div>
+                  <p class="err" id="err-termDays" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="contractAmt">Số tiền hợp đồng ghi <span class="opt">không bắt buộc</span></label>
+                  <input id="contractAmt" type="text" inputmode="numeric" autocomplete="off" placeholder="6.480.000">
+                  <div class="unit">VNĐ · nếu lớn hơn số thực nhận, kết quả sẽ cảnh báo chênh lệch</div>
+                  <p class="err" id="err-contractAmountVnd" role="alert"></p>
+                </div>
+                <div class="field optional">
+                  <label for="income">Thu nhập mỗi tháng <span class="opt">không bắt buộc</span></label>
+                  <input id="income" type="text" inputmode="numeric" autocomplete="off" placeholder="8.000.000">
+                  <div class="unit">VNĐ · chỉ dùng để tính khoản vay chiếm bao nhiêu phần trăm thu nhập, không lưu</div>
+                  <p class="err" id="err-monthlyIncomeVnd" role="alert"></p>
+                </div>
+                <div class="field optional" id="signalField">
+                  <label>Bạn có thấy dấu hiệu nào dưới đây không? <span class="opt">không bắt buộc</span></label>
+                  <label class="check small"><input type="checkbox" class="sig" value="FEE_BEFORE"><span>Bị yêu cầu trả phí trước khi nhận tiền (phí hồ sơ, xác minh, bảo hiểm...)</span></label>
+                  <label class="check small"><input type="checkbox" class="sig" value="CONTACTS"><span>Ứng dụng xin quyền truy cập danh bạ, ảnh hoặc vị trí</span></label>
+                  <label class="check small"><input type="checkbox" class="sig" value="NAME_MISMATCH"><span>Tên pháp lý trong hợp đồng khác tên ứng dụng, hoặc không tra được mã số doanh nghiệp</span></label>
+                  <label class="check small"><input type="checkbox" class="sig" value="HARASSMENT"><span>Đã bị nhắn tin hoặc gọi điện đe dọa, làm phiền người thân</span></label>
+                  <div class="unit">Lãi suất thấp không có nghĩa là an toàn. Các dấu hiệu này được tính riêng.</div>
+                </div>
+                <div class="field optional" id="feeField">
+                  <label>Các khoản phí trong hợp đồng <span class="opt">không bắt buộc</span></label>
+                  <div id="feeList"></div>
+                  <button type="button" id="addFeeBtn" class="btn btn-ghost sm">+ Thêm khoản phí</button>
+                  <div class="unit">Ví dụ: bảo hiểm khoản vay, phí tư vấn, phí hồ sơ. Đây là phí nằm trong số tiền bạn phải trả.</div>
+                </div>
+                <div class="field optional">
+                  <label for="statedRate">Lãi suất hợp đồng ghi <span class="opt">không bắt buộc</span></label>
+                  <input id="statedRate" type="text" inputmode="decimal" autocomplete="off" placeholder="60">
+                  <div class="unit">%/năm · lãi suất ghi trong hợp đồng hoặc quảng cáo, để so với lãi suất thật</div>
+                  <p class="err" id="err-statedRatePercent" role="alert"></p>
+                </div>
+              </div>
+              <label class="check" id="ocrConfirmRow" hidden><input type="checkbox" id="ocrConfirm"><span>Tôi đã đối chiếu 4 ô trên với hợp đồng gốc và các số đúng.</span></label>
+              <p class="err" id="err-form" role="alert"></p>
+              <div class="btn-row">
+                <button type="button" id="sampleBtn" class="btn btn-ghost">Dùng ví dụ</button>
+                <button type="submit" id="submitBtn" class="btn btn-primary grow">Phân tích ngay</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- SCREEN 2: ANALYZING -->
+          <div class="screen analyzing" id="screen-analyzing">
+            <div class="scan-ring"></div>
+            <div class="step-text mono" id="analyzeStepText">Đang tính lãi suất thực…</div>
+          </div>
+
+          <!-- SCREEN 3: RESULT -->
+          <div class="screen" id="screen-result" aria-live="polite">
+            <span class="badge danger" id="riskBadge"><span class="b-dot"></span><span id="riskTitle"></span></span>
+
+            <div class="rate-display">
+              <div class="rate-num" id="rateNum"><span id="aprValue">0</span><span class="unit">%/năm — lãi suất quy theo năm</span></div>
+              <div class="rate-caption" id="aprSub"></div>
+            </div>
+
+            <div class="compare">
+              <div class="compare-row">
+                <div class="lbl">Mức tham khảo</div>
+                <div class="compare-track"><div class="compare-fill legal" id="fillLegal"></div></div>
+                <div class="val">20%</div>
+              </div>
+              <div class="compare-row" id="statedRow" hidden>
+                <div class="lbl">Hợp đồng ghi</div>
+                <div class="compare-track"><div class="compare-fill stated" id="fillStated"></div></div>
+                <div class="val mono" id="statedVal"></div>
+              </div>
+              <div class="compare-row">
+                <div class="lbl">Thực tế</div>
+                <div class="compare-track"><div class="compare-fill real" id="fillReal"></div></div>
+                <div class="val mono" id="fillRealVal">—</div>
+              </div>
+            </div>
+
+            <div class="legal-tag" id="capBox" hidden>
+              <span>⚖</span>
+              <span id="capText"></span>
+            </div>
+
+            <details class="rights-box" id="scenBox" hidden open>
+              <summary>Cách tính lãi ghi trong hợp đồng: <span id="scenSummary"></span></summary>
+              <div class="sched-wrap">
+                <table class="grow-table sched" id="scenTable"><thead><tr><th>Cách tính</th><th>Gốc suy ra</th><th>Chênh so với tiền nhận</th><th>Kết quả</th></tr></thead><tbody></tbody></table>
+              </div>
+              <p class="small muted" id="scenNote"></p>
+            </details>
+
+            <div class="legal-tag gap" id="hiddenBox" hidden>
+              <span>⚠</span>
+              <span><strong>Chi phí ẩn khoảng <span id="hiddenVal"></span>.</strong> <span id="hiddenMsg"></span></span>
+            </div>
+
+            <details class="rights-box compound" id="compoundBox">
+              <summary>Nếu cộng dồn lãi cả năm: <span class="mono" id="compoundVal"></span></summary>
+              <p class="small muted" id="compoundText"></p>
+              <table class="grow-table" id="growTable"><thead><tr><th>Sau</th><th>Số nợ nếu không trả</th></tr></thead><tbody></tbody></table>
+            </details>
+
+            <details class="rights-box" id="scheduleBox" hidden>
+              <summary>Lịch trả nợ từng kỳ (<span id="schedN"></span> kỳ)</summary>
+              <div class="sched-wrap">
+                <table class="grow-table sched" id="schedTable"><thead><tr><th>Kỳ</th><th>Trả</th><th>Trong đó lãi</th><th>Còn nợ gốc</th></tr></thead><tbody></tbody></table>
+              </div>
+              <p class="small muted">Tính theo lãi suất thật ở trên, mỗi kỳ trả bằng nhau, bắt đầu từ số tiền bạn thực nhận.</p>
+            </details>
+
+            <p class="risk-msg" id="riskMsg"></p>
+
+            <div class="legal-tag" id="legalTag">
+              <span id="legalIcon">⚠</span>
+              <span><strong id="fLicence"></strong></span>
+            </div>
+
+            <div class="legal-tag gap" id="gapBox" hidden>
+              <span>⚠</span>
+              <span><strong>Bạn nhận ít hơn số hợp đồng ghi.</strong> <span id="gapMsg"></span></span>
+            </div>
+
+            <dl class="facts">
+              <div><dt>Bên cho vay</dt><dd id="fLender"></dd></div>
+              <div><dt>Bạn nhận</dt><dd class="mono" id="fPrincipal"></dd></div>
+              <div><dt>Bạn phải trả</dt><dd class="mono" id="fRepay"></dd></div>
+              <div><dt>Trả thêm</dt><dd class="mono em" id="fExtra"></dd></div>
+              <div><dt>Thời hạn</dt><dd class="mono" id="fDays"></dd></div>
+            </dl>
+
+            <div class="legal-tag" id="signalBox" hidden>
+              <span>⚑</span>
+              <span><strong>Dấu hiệu bạn đã đánh dấu:</strong> <span id="signalText"></span></span>
+            </div>
+
+            <div class="burden" id="burdenBox" hidden>
+              <div class="burden-top"><span id="burdenPct" class="mono"></span><span id="burdenLbl"></span></div>
+              <div class="compare-track"><div class="compare-fill" id="burdenFill"></div></div>
+              <p class="small muted" id="burdenNote"></p>
+            </div>
+
+            <details class="rights-box" id="lateBox">
+              <summary>Nếu trả trễ (minh họa)</summary>
+              <table class="grow-table sched" id="lateTable"><thead><tr><th class="l">Trễ</th><th>Số nợ ước tính</th><th>Thêm so với hạn</th></tr></thead><tbody></tbody></table>
+              <p class="small muted" id="lateNote"></p>
+            </details>
+
+            <div class="explain">
+              <h3>Giải thích</h3>
+              <p id="explanation"></p>
+              <p id="legalComparison" class="muted"></p>
+              <p class="next"><b>Bước tiếp theo:</b> <span id="nextStep"></span></p>
+              <p id="aiNote" class="muted small"></p>
+            </div>
+
+            <details class="rights-box" id="altBox" hidden>
+              <summary>Có thể xem trước những lựa chọn nào khác?</summary>
+              <div class="rights">
+                <div class="r-item">Sản phẩm vay tiêu dùng của ngân hàng hoặc công ty tài chính có trong danh sách cấp phép. Hãy so sánh lãi suất thật (có tính phí), không chỉ lãi suất quảng cáo.</div>
+                <div class="r-item">Ứng lương hoặc hỗ trợ tài chính từ nơi làm việc, nếu công ty bạn có.</div>
+                <div class="r-item">Xin bên cho vay hiện tại gia hạn hoặc chia nhỏ khoản phải trả, bằng văn bản.</div>
+              </div>
+              <p class="small muted">TrueRate chưa đề cử đơn vị cụ thể. Danh sách đã xác minh kèm lãi suất thật sẽ có ở giai đoạn sau.</p>
+            </details>
+
+            <details class="rights-box" id="kitBox">
+              <summary>Tôi đã vay rồi, nên làm gì?</summary>
+              <p id="kitAiMsg" class="small muted" role="status">Mở mục này để AI soạn các bước và mẫu thư riêng cho khoản vay của bạn.</p>
+              <div class="rights" id="kitSteps"></div>
+              <textarea id="letterText" class="letter" rows="11" readonly hidden></textarea>
+              <button type="button" id="copyLetter" class="btn btn-ghost sm" hidden>Sao chép mẫu thư</button>
+              <span id="copyOk" class="muted small" hidden> Đã sao chép.</span>
+              <p class="small muted" id="kitFoot" hidden>Điền họ tên và ngày vào chỗ trống trước khi gửi. TrueRate không lưu nội dung thư.</p>
+            </details>
+
+            <details class="rights-box">
+              <summary>Quyền của bạn khi bị đòi nợ sai cách</summary>
+              <div class="rights" id="rightsList"></div>
+            </details>
+
+            <p id="disclaimer" class="disclaimer"></p>
+            <p id="listInfo" class="muted small"></p>
+
+            <div class="intent" id="intentBox">
+              <div class="intent-q">Sau khi xem kết quả, bạn định làm gì tiếp theo?</div>
+              <div class="intent-btns">
+                <button class="btn btn-ghost sm" data-intent="STILL_BORROW">Vẫn vay</button>
+                <button class="btn btn-ghost sm" data-intent="BORROW_LESS">Vay ít hơn</button>
+                <button class="btn btn-ghost sm" data-intent="CHOOSE_OTHER">Chọn nơi khác</button>
+                <button class="btn btn-ghost sm" data-intent="ASK_LENDER">Hỏi lại bên cho vay</button>
+                <button class="btn btn-ghost sm" data-intent="UNSURE">Chưa biết</button>
+              </div>
+              <span id="intentThanks" class="muted small" hidden>Cảm ơn bạn. Câu trả lời này ẩn danh và giúp nhóm biết công cụ có thực sự giúp được không.</span>
+            </div>
+
+            <div class="feedback">
+              <span>Kết quả này có rõ ràng không?</span>
+              <button class="btn btn-ghost sm" data-helpful="true">Rõ</button>
+              <button class="btn btn-ghost sm" data-helpful="false">Chưa rõ</button>
+              <span id="thanks" class="muted small" hidden>Cảm ơn bạn đã phản hồi.</span>
+            </div>
+
+            <div class="result-actions">
+              <button class="btn btn-ghost" id="backBtn">Sửa số liệu</button>
+              <button class="btn btn-primary" id="againBtn" style="margin-top:0;">Kiểm tra khoản vay khác</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow">
+    <div class="section-head">
+      <div class="eyebrow">Cách hoạt động</div>
+      <h2>Ba bước, một lệnh gọi AI</h2>
+    </div>
+    <div class="flow-grid">
+      <div class="flow-item">
+        <div class="num">01</div>
+        <h3>Nhập thông tin hợp đồng</h3>
+        <p>Số tiền nhận, tổng phải trả, thời hạn, tên bên cho vay. Nhập tay hoặc chụp ảnh nhiều trang hợp đồng.</p>
+      </div>
+      <div class="flow-item">
+        <div class="num">02</div>
+        <h3>Tính lãi suất thực</h3>
+        <p>Lãi suất quy theo năm (tính lãi đơn, cùng cơ sở với mức tham khảo của luật) do code tính, không qua AI. Danh sách cấp phép cũng do code đối chiếu.</p>
+      </div>
+      <div class="flow-item">
+        <div class="num">03</div>
+        <h3>Hiểu kết quả</h3>
+        <p>AI chỉ viết lời giải thích từ con số đã tính sẵn. Không tự kết luận pháp lý thay bạn.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="levels">
+    <div class="section-head">
+      <div class="eyebrow">Các mức cảnh báo</div>
+      <h2>Không phải mọi khoản vay đều là bẫy</h2>
+    </div>
+    <div class="level-grid">
+      <div class="level-card safe">
+        <span class="badge safe"><span class="b-dot"></span>THẤP</span>
+        <div class="l-rate">≤ 20<span class="u">%/năm</span></div>
+        <div class="l-desc">Có trong danh sách cấp phép và lãi suất thực trong mức tham khảo.</div>
+      </div>
+      <div class="level-card caution">
+        <span class="badge caution"><span class="b-dot"></span>CẦN CÂN NHẮC</span>
+        <div class="l-rate">20–100<span class="u">%/năm</span></div>
+        <div class="l-desc">Cao hơn mức tham khảo 20%/năm. Hãy so sánh trước khi quyết định.</div>
+      </div>
+      <div class="level-card danger">
+        <span class="badge danger"><span class="b-dot"></span>RỦI RO NGHIÊM TRỌNG</span>
+        <div class="l-rate">&gt; 100<span class="u">%/năm</span></div>
+        <div class="l-desc">Không tìm thấy trong danh sách cấp phép và lãi suất vượt 100%/năm.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>TrueRate không cho vay tiền và không nhận phí từ người vay. Kết quả dựa trên số liệu bạn nhập và không xác minh hợp đồng có thật hay không.</div>
+    <div class="mono">EXE101 · Group 4</div>
+  </div>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+{
+  "version": "demo-2026-10-21",
+  "source": "DEMO LIST for development only: common commercial banks and finance companies added by the team, NOT complete and NOT the official SBV list. Replace with the official SBV licensed list before launch.",
+  "lenders": [
+    {
+      "name": "Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank)",
+      "aliases": [
+        "vpbank",
+        "cake by vpbank",
+        "ngan hang tmcp viet nam thinh vuong",
+        "viet nam thinh vuong"
+      ]
+    },
+    {
+      "name": "FE Credit",
+      "aliases": [
+        "fe credit",
+        "fecredit",
+        "vpbank fe credit"
+      ]
+    },
+    {
+      "name": "Home Credit Vietnam",
+      "aliases": [
+        "home credit",
+        "home credit vietnam",
+        "homecredit"
+      ]
+    },
+    {
+      "name": "Mirae Asset Finance",
+      "aliases": [
+        "mirae asset",
+        "mirae asset finance",
+        "mirae asset prudential"
+      ]
+    },
+    {
+      "name": "HD SAISON",
+      "aliases": [
+        "hd saison",
+        "hdsaison",
+        "hd saison finance"
+      ]
+    },
+    {
+      "name": "Shinhan Finance",
+      "aliases": [
+        "shinhan finance",
+        "shinhan"
+      ]
+    },
+    {
+      "name": "Lotte Finance",
+      "aliases": [
+        "lotte finance",
+        "lotte"
+      ]
+    },
+    {
+      "name": "MCredit",
+      "aliases": [
+        "mcredit",
+        "m credit",
+        "mcredit vietnam"
+      ]
+    },
+    {
+      "name": "JACCS International Vietnam Finance",
+      "aliases": [
+        "jaccs",
+        "jaccs vietnam",
+        "jaccs international vietnam finance"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Quân đội (MB)",
+      "aliases": [
+        "mb",
+        "mbbank",
+        "mb bank",
+        "quan doi"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Ngoại thương Việt Nam (Vietcombank)",
+      "aliases": [
+        "vietcombank",
+        "vcb",
+        "ngoai thuong viet nam"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)",
+      "aliases": [
+        "bidv",
+        "dau tu va phat trien viet nam"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Công Thương Việt Nam (VietinBank)",
+      "aliases": [
+        "vietinbank",
+        "cong thuong viet nam"
+      ]
+    },
+    {
+      "name": "Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam (Agribank)",
+      "aliases": [
+        "agribank",
+        "nong nghiep va phat trien nong thon viet nam"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Kỹ thương Việt Nam (Techcombank)",
+      "aliases": [
+        "techcombank",
+        "tcb",
+        "ky thuong viet nam"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Á Châu (ACB)",
+      "aliases": [
+        "acb",
+        "a chau"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Tiên Phong (TPBank)",
+      "aliases": [
+        "tpbank",
+        "tien phong"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Sài Gòn Thương Tín (Sacombank)",
+      "aliases": [
+        "sacombank",
+        "sai gon thuong tin"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Phát triển Thành phố Hồ Chí Minh (HDBank)",
+      "aliases": [
+        "hdbank",
+        "phat trien thanh pho ho chi minh"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Sài Gòn - Hà Nội (SHB)",
+      "aliases": [
+        "shb",
+        "sai gon ha noi"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Quốc tế Việt Nam (VIB)",
+      "aliases": [
+        "vib",
+        "quoc te viet nam"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Hàng Hải Việt Nam (MSB)",
+      "aliases": [
+        "msb",
+        "hang hai viet nam"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Phương Đông (OCB)",
+      "aliases": [
+        "ocb",
+        "phuong dong"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Đông Nam Á (SeABank)",
+      "aliases": [
+        "seabank",
+        "dong nam a"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Lộc Phát Việt Nam (LPBank)",
+      "aliases": [
+        "lpbank",
+        "loc phat viet nam",
+        "lienvietpostbank",
+        "lien viet"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Xuất Nhập khẩu Việt Nam (Eximbank)",
+      "aliases": [
+        "eximbank",
+        "xuat nhap khau viet nam"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Nam Á (Nam A Bank)",
+      "aliases": [
+        "nam a bank",
+        "namabank",
+        "nam a"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP An Bình (ABBANK)",
+      "aliases": [
+        "abbank",
+        "an binh"
+      ]
+    },
+    {
+      "name": "Ngân hàng TMCP Bắc Á (Bac A Bank)",
+      "aliases": [
+        "bac a bank",
+        "bacabank",
+        "bac a"
+      ]
+    }
+  ]
+}
